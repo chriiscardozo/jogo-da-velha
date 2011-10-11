@@ -1,6 +1,27 @@
 #include <stdio.h>
+#include <conio.h>
 
 char matriz[3][3];
+
+void carregaMenu();
+
+void opcaoInvalida(){
+     printf("\nOpcao invalida... Tente novamente!\n");
+     getch();
+}
+
+void limpaCls(){
+     #ifdef LINUX
+           system("clear");
+     #elif defined WIN32
+           system("cls");
+     #else
+           printf("ERRO: Plataforma nao suportada.\n");
+           printf("Disponivel apenas para Linux e Windows");
+           getchar();
+           exit(1);
+     #endif
+}
 
 void init_matriz(){
      int i, j;
@@ -19,7 +40,7 @@ void disp_matriz(){
      }
 }
 
-void move_jogador(){
+void move_jogador( char ch ){
      int x, y;
      printf("\n\nDigite em qual pos(x, y) deseja jogar: ");
      scanf("%d%d", &x, &y);
@@ -27,13 +48,13 @@ void move_jogador(){
      y--;
      
      if(matriz[x][y] != ' '){
-        printf("Posicao invalida ou ja jogada, tente novamente...\n\n");
-        move_jogador();
+        opcaoInvalida();
+        move_jogador( ch );
      }
-     else matriz[x][y] = 'X';
+     else matriz[x][y] = ch;
 }
 
-void move_cpu(){
+void move_cpu( char ch ){
      int i, j;
      
      for(i = 0; i < 3; i++){
@@ -47,7 +68,7 @@ void move_cpu(){
             getchar();
             exit(0);
      }
-     else matriz[i][j] = 'O';
+     else matriz[i][j] = ch;
 }
 
 char check_vencedor(){
@@ -69,28 +90,69 @@ char check_vencedor(){
      return ' ';
 }
 
-int main(){
-    char terminado = ' ';
-    
-    printf("\t\tJogo da Velha :)\n");
-    printf("Modo: vs cpu\n\n");
-    init_matriz();
-    do{
-       disp_matriz();
-       move_jogador();
-       terminado = check_vencedor();
-       
-       if(terminado != ' ') break;
-       
-       move_cpu();
-       terminado = check_vencedor();
+void playMultiplayer(){
+
+}
+
+void playCPU(){
+     char terminado = ' ';
+     init_matriz();
+     limpaCls();
+     printf("\t\t\tModo vs. CPU\nComece jogando\n\n");
+     
+     do{
+        disp_matriz();
+        move_jogador( 'X' );
+        terminado = check_vencedor();
+        
+        if(terminado != ' ') break;
+        
+        move_cpu( 'O' );
+        terminado = check_vencedor();
     }while( terminado == ' ');
     
     if(terminado == 'X') printf("\n\nParabens, voce venceu!\n");
     else printf("\n\nQue pena, voce perdeu!\n");
     
     disp_matriz();
-    fflush(stdin);
+    printf("...");
+    getch();
+    carregaMenu();
+}
+
+void play( int modo ){
+     if( modo == 1 ) playCPU();
+     else playMultiplayer();
+     
+}
+
+void carregaMenu(){
+     int escolha;
+     
+     while(1){
+              limpaCls();
+              printf("\t\t\t0,1\n\n Menu Principal:\n");
+              printf(" 1 - vs. CPU\n");
+              printf(" 2 - Modo Multiplayer\n");
+              printf(" 3 - Sair\n");
+
+              printf("Digite um numero para escolher uma opcao e de ENTER: ");
+              scanf("%d", &escolha);
+       
+              if( escolha < 1 || escolha > 3 ) opcaoInvalida();
+              else if( escolha == 3 ) exit(0);
+              else break;
+    }
+    
+    play(escolha);
+}
+
+int main(){    
+    printf("\t\tJogo da Velha :)\n");
+    printf("\n\n\nPrecione qualquer tecla para continuar...");
+    getch();
+    carregaMenu();
+
     getchar();
     return 0;
 }
