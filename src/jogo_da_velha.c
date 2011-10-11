@@ -13,10 +13,10 @@ void opcaoInvalida(){
 void limpaCls(){
      #ifdef LINUX
            system("clear");
-     #elif defined WIN32
+     #elif defined WIN32 || WIN64
            system("cls");
      #else
-           printf("ERRO: Plataforma nao suportada.\n");
+           printf("\nERRO: Plataforma nao suportada.\n");
            printf("Disponivel apenas para Linux e Windows");
            getchar();
            exit(1);
@@ -40,16 +40,16 @@ void disp_matriz(){
      }
 }
 
-void move_jogador( char ch ){
+void move_jogador( char ch, const char *player ){
      int x, y;
-     printf("\n\nDigite em qual pos(x, y) deseja jogar: ");
+     printf("\n\n%s: Digite em qual pos(x, y) deseja jogar: ", player);
      scanf("%d%d", &x, &y);
      x--;
      y--;
      
      if(matriz[x][y] != ' '){
         opcaoInvalida();
-        move_jogador( ch );
+        move_jogador( ch, player );
      }
      else matriz[x][y] = ch;
 }
@@ -63,12 +63,17 @@ void move_cpu( char ch ){
         if(matriz[i][j] == ' ') break;
      }
      
-     if(i*j == 9){
-            printf("\nEMPATE");
-            getchar();
-            exit(0);
-     }
-     else matriz[i][j] = ch;
+     matriz[i][j] = ch;
+}
+
+int deu_velha(){
+    int i, j;
+    
+    for(i = 0; i < 3; i++)
+       for(j = 0; j < 3; j++)
+             if(matriz[i][j] == ' ') return 0;
+             
+    return 1;
 }
 
 char check_vencedor(){
@@ -87,11 +92,35 @@ char check_vencedor(){
      if( (matriz[1][1] == matriz[0][2]) && (matriz[1][1] == matriz[2][0]) )
         return matriz[1][1];
      
+     if(deu_velha()) return 'V';
+     
      return ' ';
 }
 
 void playMultiplayer(){
-
+     char terminado = ' ';
+     init_matriz();
+     printf("Modo Multiplayer\n\t\tPlayer 1 - X\n\t\tPlayer 2 - O\n\n");
+     
+     do{
+        disp_matriz();
+        move_jogador( 'X', "Player 1" );
+        terminado = check_vencedor();
+        if(terminado != ' ') break;
+        
+        disp_matriz();
+        move_jogador( 'O', "Player 2" );
+        terminado = check_vencedor();
+    }while( terminado == ' ');
+    
+    if(terminado == 'X') printf("O player 1 venceu! Parabéns!\n");
+    else if(terminado == 'O') printf("O player 2 venceu! Parabéns!\n");
+    else printf("\n\nOps, deu velha!\n");
+    disp_matriz();
+    
+    printf("...");
+    getch();
+    carregaMenu();
 }
 
 void playCPU(){
@@ -102,7 +131,7 @@ void playCPU(){
      
      do{
         disp_matriz();
-        move_jogador( 'X' );
+        move_jogador( 'X' , "Player 1");
         terminado = check_vencedor();
         
         if(terminado != ' ') break;
@@ -112,7 +141,8 @@ void playCPU(){
     }while( terminado == ' ');
     
     if(terminado == 'X') printf("\n\nParabens, voce venceu!\n");
-    else printf("\n\nQue pena, voce perdeu!\n");
+    else if(terminado == 'O') printf("\n\nQue pena, voce perdeu!\n");
+    else printf("\n\nOps, deu velha!\n");
     
     disp_matriz();
     printf("...");
