@@ -54,7 +54,7 @@ void move_jogador( char ch, const char *player ){
      else matriz[x][y] = ch;
 }
 
-void move_cpu( char ch ){
+void move_cpu_facil( char ch ){
      int i, j;
      
      for(i = 0; i < 3; i++){
@@ -64,6 +64,25 @@ void move_cpu( char ch ){
      }
      
      matriz[i][j] = ch;
+}
+
+void move_cpu_medio( char ch){
+     
+}
+
+void move_cpu_dificil( char ch){
+     
+}
+
+void move_cpu( char ch, int nivel ){
+     if(nivel == 1) move_cpu_facil(ch);
+     else if(nivel == 2) move_cpu_medio(ch);
+     else if(nivel == 3) move_cpu_dificil(ch);
+     else{
+          printf("ERRO: nivel nao compativel");
+          getch();
+          exit(1);
+     }
 }
 
 int deu_velha(){
@@ -100,7 +119,8 @@ char check_vencedor(){
 void playMultiplayer(){
      char terminado = ' ';
      init_matriz();
-     printf("Modo Multiplayer\n\t\tPlayer 1 - X\n\t\tPlayer 2 - O\n\n");
+     limpaCls();
+     printf(" Modo Multiplayer\n\t\tPlayer 1 - X\n\t\tPlayer 2 - O\n\n");
      
      do{
         disp_matriz();
@@ -123,7 +143,7 @@ void playMultiplayer(){
     carregaMenu();
 }
 
-void playCPU(){
+void playCPU(int nivel){
      char terminado = ' ';
      init_matriz();
      limpaCls();
@@ -136,7 +156,7 @@ void playCPU(){
         
         if(terminado != ' ') break;
         
-        move_cpu( 'O' );
+        move_cpu( 'O', nivel );
         terminado = check_vencedor();
     }while( terminado == ' ');
     
@@ -150,8 +170,26 @@ void playCPU(){
     carregaMenu();
 }
 
+int escolhe_dificuldade(){
+    int nivel;
+    
+    while(1){
+        limpaCls();
+        printf(" Nivel de dificuldade\n");
+        printf(" 1 - Facil\n");
+        printf(" 2 - Medio*nao implementado\n");
+        printf(" 3 - Dificil*nao implementado\n");
+        printf("\n\nEscolha o nivel de dificuldade e de ENTER: ");
+        scanf("%d", &nivel);
+        if( nivel != 1 ) opcaoInvalida();
+        else break;
+    }
+    
+    return nivel;
+}
+
 void play( int modo ){
-     if( modo == 1 ) playCPU();
+     if( modo == 1 ) playCPU(escolhe_dificuldade());
      else playMultiplayer();
      
 }
