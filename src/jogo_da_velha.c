@@ -1,5 +1,7 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <conio.h>
+#include <time.h>
 
 char matriz[3][3];
 
@@ -67,11 +69,19 @@ void move_cpu_facil( char ch ){
 }
 
 void move_cpu_medio( char ch){
+     int x, y;
      
+     do{
+         srand(time(NULL));
+         x = rand()%3;
+         y = rand()%3;
+     }while(matriz[x][y] != ' ');
+     
+     matriz[x][y] = ch;
 }
 
 void move_cpu_dificil( char ch){
-     
+     //criar funções que bloqueiem a vitoria do player
 }
 
 void move_cpu( char ch, int nivel ){
@@ -177,11 +187,11 @@ int escolhe_dificuldade(){
         limpaCls();
         printf(" Nivel de dificuldade\n");
         printf(" 1 - Facil\n");
-        printf(" 2 - Medio*nao implementado\n");
+        printf(" 2 - Medio\n");
         printf(" 3 - Dificil*nao implementado\n");
         printf("\n\nEscolha o nivel de dificuldade e de ENTER: ");
         scanf("%d", &nivel);
-        if( nivel != 1 ) opcaoInvalida();
+        if( nivel < 1 || nivel > 2 ) opcaoInvalida();
         else break;
     }
     
@@ -215,7 +225,7 @@ void carregaMenu(){
     play(escolha);
 }
 
-int main(){    
+int main(){
     printf("\t\tJogo da Velha :)\n");
     printf("\n\n\nPrecione qualquer tecla para continuar...");
     getch();
