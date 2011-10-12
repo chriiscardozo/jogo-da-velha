@@ -80,8 +80,107 @@ void move_cpu_medio( char ch){
      matriz[x][y] = ch;
 }
 
+int block_linha1( char ch ){
+    if(matriz[0][0] == ' '){
+       if(((matriz[0][1] == matriz[0][2]) && (matriz[0][1] != ' ')) ||
+          ((matriz[1][0] == matriz[2][0]) && (matriz[1][0] != ' ')) ||
+          ((matriz[1][1] == matriz[2][2]) && (matriz[1][1] != ' '))){
+             matriz[0][0] = ch;
+             return 1;
+       }
+    }
+    
+    if(matriz[0][1] == ' '){
+       if(((matriz[0][0] == matriz[0][2]) && (matriz[0][0] != ' ')) ||
+          ((matriz[1][1] == matriz[2][1]) && (matriz[1][1] != ' '))){
+             matriz[0][1] = ch;
+             return 1;
+       }
+    }
+    
+    if(matriz[0][2] == ' '){
+       if(((matriz[0][1] == matriz[0][0]) && (matriz[0][1] != ' ')) ||
+          ((matriz[1][2] == matriz[2][2]) && (matriz[1][2] != ' ')) ||
+          ((matriz[1][1] == matriz[2][0]) && (matriz[1][1] != ' '))){
+             matriz[0][2] = ch;
+             return 1;
+       }
+    }
+    
+    return 0;
+}
+
+int block_linha2( char ch ){
+    if(matriz[1][0] == ' '){
+       if(((matriz[0][0] == matriz[2][0]) && (matriz[0][0] != ' ')) ||
+          ((matriz[1][1] == matriz[1][2]) && (matriz[1][1] != ' '))){
+              matriz[1][0] = ch;
+              return 1;
+       }
+    }
+    
+    if(matriz[1][1] == ' '){
+       if(((matriz[0][0] == matriz[2][2]) && (matriz[0][0] != ' ')) ||
+          ((matriz[0][2] == matriz[2][0]) && (matriz[0][2] != ' ')) ||
+          ((matriz[1][0] == matriz[1][2]) && (matriz[1][0] != ' ')) ||
+          ((matriz[0][1] == matriz[2][1]) && (matriz[0][1] != ' '))){
+              matriz[1][1] = ch;
+              return 1;
+       }
+    }
+    
+    if(matriz[1][2] == ' '){
+       if(((matriz[1][1] == matriz[1][0]) && (matriz[1][1] != ' ')) ||
+          ((matriz[0][2] == matriz[2][0]) && (matriz[0][2] != ' '))){
+              matriz[1][2] = ch;
+              return 1;
+       }
+    }
+    
+    return 0;
+}
+
+int block_linha3( char ch ){
+    if(matriz[2][0] == ' '){
+       if(((matriz[0][0] == matriz[1][0]) && (matriz[0][0] != ' ')) ||
+          ((matriz[2][1] == matriz[2][2]) && (matriz[2][1] != ' ')) ||
+          ((matriz[1][1] == matriz[0][2]) && (matriz[1][1] != ' '))){
+              matriz[2][0] = ch;
+              return 1;
+       }
+    }
+    
+    if(matriz[2][1] == ' '){
+       if(((matriz[2][0] == matriz[2][2]) && (matriz[2][0] != ' ')) ||
+          ((matriz[1][1] == matriz[0][1]) && (matriz[1][1] != ' '))){
+              matriz[2][1] = ch;
+              return 1;
+       }
+    }
+    
+    if(matriz[2][2] == ' '){
+       if(((matriz[2][1] == matriz[2][0]) && (matriz[2][1] != ' ')) ||
+          ((matriz[0][2] == matriz[1][2]) && (matriz[0][2] != ' ')) ||
+          ((matriz[1][1] == matriz[0][0]) && (matriz[1][1] != ' '))){
+              matriz[2][2] = ch;
+              return 1;
+       }
+    }
+    
+    return 0;
+}
+
+int block_player( char ch){
+    
+    if(block_linha1(ch) || block_linha2(ch) || block_linha3(ch)) return 1;
+    
+    return 0;
+}
+
 void move_cpu_dificil( char ch){
-     //criar funções que bloqueiem a vitoria do player
+     
+     if(block_player( ch )) return;
+     move_cpu_medio(ch);
 }
 
 void move_cpu( char ch, int nivel ){
@@ -143,8 +242,8 @@ void playMultiplayer(){
         terminado = check_vencedor();
     }while( terminado == ' ');
     
-    if(terminado == 'X') printf("O player 1 venceu! Parabéns!\n");
-    else if(terminado == 'O') printf("O player 2 venceu! Parabéns!\n");
+    if(terminado == 'X') printf("\n\nO player 1 venceu! Parabens!\n");
+    else if(terminado == 'O') printf("\n\nO player 2 venceu! Parabens!\n");
     else printf("\n\nOps, deu velha!\n");
     disp_matriz();
     
@@ -188,10 +287,10 @@ int escolhe_dificuldade(){
         printf(" Nivel de dificuldade\n");
         printf(" 1 - Facil\n");
         printf(" 2 - Medio\n");
-        printf(" 3 - Dificil*nao implementado\n");
+        printf(" 3 - Dificil\n");
         printf("\n\nEscolha o nivel de dificuldade e de ENTER: ");
         scanf("%d", &nivel);
-        if( nivel < 1 || nivel > 2 ) opcaoInvalida();
+        if( nivel < 1 || nivel > 3 ) opcaoInvalida();
         else break;
     }
     
