@@ -326,7 +326,7 @@ void carregaMenu(){
 
 int main(){
     printf("\t\tJogo da Velha :)\n");
-    printf("\n\n\nPrecione qualquer tecla para continuar...");
+    printf("\n\n\nPressione qualquer tecla para continuar...");
     getch();
     carregaMenu();
 
