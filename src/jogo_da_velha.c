@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <conio.h>
 #include <time.h>
 
 char matriz[3][3];
@@ -8,21 +7,28 @@ char matriz[3][3];
 void carregaMenu();
 
 void opcaoInvalida(){
-     printf("\nOpcao invalida... Tente novamente!\n");
-     getch();
+     printf("\nOpcao invalida... Tente novamente!\n<ENTER>");
+     getchar();
 }
 
+void limpaBuffer(){
+   #ifdef __linux__
+           __fpurge(stdin);
+   #else
+           fflush(stdin);
+   #endif
+}
 void limpaCls(){
-     #ifdef LINUX
+   #ifdef __linux__
            system("clear");
-     #elif defined WIN32 || WIN64
+   #elif defined WIN32 || WIN64
            system("cls");
-     #else
+   #else
            printf("\nERRO: Plataforma nao suportada.\n");
            printf("Disponivel apenas para Linux e Windows");
            getchar();
            exit(1);
-     #endif
+   #endif
 }
 
 void init_matriz(){
@@ -188,8 +194,8 @@ void move_cpu( char ch, int nivel ){
      else if(nivel == 2) move_cpu_medio(ch);
      else if(nivel == 3) move_cpu_dificil(ch);
      else{
-          printf("ERRO: nivel nao compativel");
-          getch();
+          printf("ERRO: nivel nao compativel....\n<ENTER>");
+          getchar();
           exit(1);
      }
 }
@@ -247,8 +253,9 @@ void playMultiplayer(){
     else printf("\n\nOps, deu velha!\n");
     disp_matriz();
     
-    printf("...");
-    getch();
+    printf("...\nPressione <ENTER>");
+    limpaBuffer();
+    getchar();
     carregaMenu();
 }
 
@@ -274,8 +281,9 @@ void playCPU(int nivel){
     else printf("\n\nOps, deu velha!\n");
     
     disp_matriz();
-    printf("...");
-    getch();
+    printf("...\nPressione <ENTER>");
+    limpaBuffer();
+    getchar();
     carregaMenu();
 }
 
@@ -326,8 +334,8 @@ void carregaMenu(){
 
 int main(){
     printf("\t\tJogo da Velha :)\n");
-    printf("\n\n\nPressione qualquer tecla para continuar...");
-    getch();
+    printf("\n\n\nPressione <ENTER> para continuar...");
+    getchar();
     carregaMenu();
 
     getchar();
